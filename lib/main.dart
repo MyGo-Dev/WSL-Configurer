@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:arche/arche.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:dynamic_color/dynamic_color.dart';
@@ -6,8 +8,11 @@ import 'package:wslconfigurer/i18n/i18n.dart';
 import 'package:wslconfigurer/models/config.dart';
 import 'package:wslconfigurer/views/widgets/basic.dart';
 import 'package:wslconfigurer/views/pages/install.dart';
+import 'package:rinf/rinf.dart';
+import './messages/generated.dart';
 
 void main() async {
+  await initializeRust(assignRustSignal);
   WidgetsFlutterBinding.ensureInitialized();
   // Init Config
   var config = ArcheBus.bus
@@ -67,6 +72,25 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late AppLifecycleListener _lifecycleListener;
+
+  @override
+  void initState() {
+    super.initState();
+    _lifecycleListener = AppLifecycleListener(
+      onExitRequested: () async {
+        finalizeRust();
+        return AppExitResponse.exit;
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _lifecycleListener.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return NavigationView(

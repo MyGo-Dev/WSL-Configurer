@@ -1,3 +1,4 @@
 home: Home
 install: Install
 install.prepare: Prepare
+install.auto_install: Auto Install

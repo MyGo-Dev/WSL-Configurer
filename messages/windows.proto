@@ -1,0 +1,18 @@
+syntax = "proto3";
+package windows;
+
+// [RINF:RUST-SIGNAL]
+message OptionFeatures {
+    repeated OptionalFeature features = 1;
+}
+
+
+message OptionalFeature {
+    string Name = 1;
+    string Caption = 2;
+    int32 InstallState = 3;
+}
+
+// [RINF:DART-SIGNAL]
+message QueryOptionalFeature {
+}
