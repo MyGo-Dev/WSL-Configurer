@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:arche/arche.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import 'package:wslconfigurer/i18n/constants.dart';
 import 'package:yaml/yaml.dart';
 
@@ -19,8 +21,13 @@ class I18n {
       this.locale = locale;
     }
 
-    _fields =
-        _load(await rootBundle.loadString(i18nLanguageFields(this.locale)));
+    _fields = _load(await rootBundle.loadString(fileName("fields.yaml")));
+  }
+
+  String fileName(String fileName) => i18nLanguageFile(locale, fileName);
+
+  Future<String> loadString(String fileName) async {
+    return await rootBundle.loadString(this.fileName(fileName));
   }
 
   String getOrKey(String translateKey) {
@@ -46,5 +53,23 @@ extension I18nEx on BuildContext {
 
   T i18nBuilder<T>(String translateKey, T Function(String text) builder) {
     return builder(ArcheBus.bus.of<I18n>().getOrKey(translateKey));
+  }
+
+  Widget i18nMarkdown(String fileName, [bool shrinkWrap = true]) {
+    return FutureBuilder(
+      future: ArcheBus.bus.of<I18n>().loadString(fileName),
+      builder: (context, snapshot) {
+        var data = snapshot.data;
+        if (data == null) {
+          return const CircularProgressIndicator();
+        }
+
+        return MarkdownBody(
+          data: data,
+          shrinkWrap: shrinkWrap,
+          onTapLink: (text, href, title) => launchUrlString(href.toString()),
+        );
+      },
+    );
   }
 }

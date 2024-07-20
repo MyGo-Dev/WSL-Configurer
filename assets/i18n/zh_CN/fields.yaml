@@ -1,4 +1,11 @@
 home: 主页
 install: 安装
 install.prepare: 准备
-install.auto_install: 自动安装
+install.auto_install: 自动安装 (管理员)
+open: 打开
+configure: 配置
+optional_features: 可选功能
+settings: 设置
+language: 语言
+font: 字体
+need_admin_permission: 需要管理员权限 (退出并右键程序 "以管理员身份运行")

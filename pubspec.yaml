@@ -36,7 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.6
   dio: ^5.5.0+1
   dynamic_color: ^1.7.0
-  arche: ^1.0.0
+  arche: ^1.0.1
   bitsdojo_window: ^0.1.6
   url_launcher: ^6.3.0
   yaml: ^3.1.2
@@ -44,6 +44,8 @@ dependencies:
   superuser: ^1.0.1
   rinf: ^6.14.2
   protobuf: ^3.1.0
+  system_fonts: ^1.0.1
+  flutter_markdown: ^0.7.3
 
 dev_dependencies:
   flutter_test:
@@ -73,7 +75,8 @@ flutter:
   assets:
     - assets/i18n/
     - assets/i18n/en_US/
-
+    - assets/i18n/zh_CN/
+    
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 

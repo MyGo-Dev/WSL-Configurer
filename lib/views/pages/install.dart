@@ -2,7 +2,8 @@ import 'package:arche/arche.dart';
 import 'package:arche/extensions/dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:wslconfigurer/controllers/ms_open.dart';
+import 'package:superuser/superuser.dart';
+import 'package:wslconfigurer/windows/ms_open.dart';
 import 'package:wslconfigurer/i18n/i18n.dart';
 import 'package:wslconfigurer/messages/windows.pb.dart';
 import 'package:wslconfigurer/views/widgets/basic.dart';
@@ -45,15 +46,15 @@ class _InstallPageState extends State<InstallPage> {
                   ComplexDialog.instance.text(
                     context: context,
                     content: Wrap(
+                      spacing: 8,
                       direction: Axis.vertical,
                       children: [
-                        const Text(
-                            "Optional Features -> WSL/VirtualMachinePlatform"),
+                        context.i18nMarkdown("optional_features.md", true),
                         FilledButton(
                           onPressed: () {
                             openMSSetting("optionalfeatures");
                           },
-                          child: Text("Open"),
+                          child: context.i18nText("optional_features"),
                         )
                       ],
                     ),
@@ -63,11 +64,14 @@ class _InstallPageState extends State<InstallPage> {
               ),
               title: Row(
                 children: [
-                  context.i18nText("Open Windows Features"),
+                  Text(
+                      "${context.i18n.getOrKey("configure")} ${context.i18n.getOrKey("optional_features")}"),
                 ],
               ),
               trailing: IconButton(
-                onPressed: () => setState(() {}),
+                onPressed: () => setState(() {
+                  QueryOptionalFeature().sendSignalToRust();
+                }),
                 icon: const Icon(Icons.refresh),
               ),
             )
@@ -97,7 +101,9 @@ class _InstallPageState extends State<InstallPage> {
                 alignment: Alignment.centerRight,
                 child: FilledButton(
                     onPressed: () {
-                      //TODO
+                      ComplexDialog.instance.text(
+                          context: context,
+                          content: Text(Superuser.isSuperuser.toString()));
                     },
                     child: context.i18nText("install.auto_install")),
               ),
@@ -111,30 +117,6 @@ class _InstallPageState extends State<InstallPage> {
 
         return ScrollableContainer(
           children: [
-            ListTile(
-              leading: const Icon(FontAwesomeIcons.section),
-              title: context.i18nText("install.prepare"),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: Card.filled(
-                child: Column(
-                  children: [
-                    ListTile(
-                      title: const Text("HyperV"),
-                      trailing: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.arrow_right_rounded)),
-                    ),
-                    const ListTile(
-                      title: Text("WSL"),
-                      trailing: Icon(Icons.check),
-                    )
-                  ],
-                ),
-              ),
-            ),
-            divider8,
             ListTile(
               leading: const Icon(FontAwesomeIcons.section),
               title: context.i18nText("Install Linux Distribution"),

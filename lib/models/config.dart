@@ -6,4 +6,5 @@ class AppConfigs {
       : _generator = ConfigEntry.withConfig(config, generateMap: true);
 
   ConfigEntry<String> get locale => _generator("locale");
+  ConfigEntry<String> get font => _generator("font");
 }

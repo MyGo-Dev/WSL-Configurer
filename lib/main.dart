@@ -4,26 +4,37 @@ import 'package:arche/arche.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
+import 'package:superuser/superuser.dart';
+import 'package:system_fonts/system_fonts.dart';
 import 'package:wslconfigurer/i18n/i18n.dart';
 import 'package:wslconfigurer/models/config.dart';
+import 'package:wslconfigurer/models/key.dart';
+import 'package:wslconfigurer/views/pages/settings.dart';
 import 'package:wslconfigurer/views/widgets/basic.dart';
 import 'package:wslconfigurer/views/pages/install.dart';
 import 'package:rinf/rinf.dart';
 import './messages/generated.dart';
 
 void main() async {
-  await initializeRust(assignRustSignal);
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeRust(assignRustSignal);
   // Init Config
   var config = ArcheBus.bus
       .provideof(instance: AppConfigs(ArcheConfig.path("app.config.json")));
+  if (config.font.has()) {
+    var font = await SystemFonts().loadFont(config.font.get());
+    if (font == null) {
+      config.font.delete();
+    }
+  }
+
   // Init I18n
   var i18n = I18n();
   await i18n.init(config.locale.tryGet());
   ArcheBus.bus.provide(i18n);
   // Start Launch App
   appWindow.size = const Size(750, 550);
-  runApp(const MyApp());
+  runApp(MyApp(key: appKey));
   appWindow.show();
   doWhenWindowReady(() {
     final win = appWindow;
@@ -31,31 +42,46 @@ void main() async {
     win.minSize = initialSize;
     win.size = initialSize;
     win.alignment = Alignment.center;
-    win.title = "WSL Configurer";
+    if (Superuser.isSuperuser) {
+      win.title = "WSL Configurer (Admin)";
+    } else {
+      win.title = "WSL Configurer (User)";
+    }
+
     win.show();
   });
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
+  State<StatefulWidget> createState() => MyAppState();
+}
+
+class MyAppState extends State<MyApp> with RefreshMountedStateMixin {
+  @override
   Widget build(BuildContext context) {
+    var configs = ArcheBus.bus.of<AppConfigs>();
     return DynamicColorBuilder(
       builder: (lightDynamic, darkDynamic) => MaterialApp(
         theme: ThemeData(
           useMaterial3: true,
           colorScheme: lightDynamic,
           typography: Typography.material2021(),
+          fontFamily: configs.font.tryGet(),
         ),
         darkTheme: ThemeData(
           brightness: Brightness.dark,
           useMaterial3: true,
           colorScheme: darkDynamic,
           typography: Typography.material2021(),
+          fontFamily: configs.font.tryGet(),
         ),
         home: WindowTitleBarBox(
-          child: const HomePage(),
+          child: HomePage(
+            key: rootKey,
+          ),
         ),
         debugShowCheckedModeBanner: false,
         themeMode: ThemeMode.system,
@@ -68,10 +94,10 @@ class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
   @override
-  State<StatefulWidget> createState() => _HomePageState();
+  State<StatefulWidget> createState() => HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePage> with RefreshMountedStateMixin {
   late AppLifecycleListener _lifecycleListener;
 
   @override
@@ -134,6 +160,7 @@ class _HomePageState extends State<HomePage> {
           ).toItem(icon: const Icon(Icons.install_desktop)),
           PageContainer(
             title: context.i18n.getOrKey("settings"),
+            child: const SettingsPage(),
           ).toItem(icon: const Icon(Icons.settings)),
         ]);
   }

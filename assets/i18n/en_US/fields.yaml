@@ -1,4 +1,11 @@
 home: Home
 install: Install
+settings: Settings
 install.prepare: Prepare
-install.auto_install: Auto Install
+install.auto_install: Auto Install (Admin)
+open: Open
+configure: Configure
+optional_features: Optional Features
+language: Language
+font: Font
+need_admin_permission: Need Admin Permission (Exit and right click exe and "Run as administrator")
