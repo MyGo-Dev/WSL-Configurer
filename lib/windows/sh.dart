@@ -14,6 +14,19 @@ void su(
     run();
   } else {
     ComplexDialog.instance.text(
-        context: context, content: context.i18nText("need_admin_permission"));
+      context: context,
+      title: context.i18nText("error"),
+      content: context.i18nText("need_admin_permission"),
+    );
   }
+}
+
+Future<Process> enableFeature(String featurename) async {
+  return await Process.start("dism", [
+    "/online",
+    "/enable-feature",
+    "/featurename:$featurename",
+    "/all",
+    "/norestart"
+  ]);
 }

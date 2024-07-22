@@ -22,6 +22,8 @@ class _SettingsPageState extends State<SettingsPage> {
       children: [
         ListTile(
           title: context.i18nText("language"),
+          subtitle: Text(
+              context.i18n.avaiableLanguages[context.i18n.locale] ?? "Error"),
           trailing: PopupMenuButton(
             initialValue: configs.locale.getOr("en_US"),
             onSelected: (value) async {
@@ -33,22 +35,50 @@ class _SettingsPageState extends State<SettingsPage> {
               setState(() {});
             },
             itemBuilder: (context) => context.i18n.avaiableLanguages.entries
-                .map((entry) => PopupMenuItem(
-                      value: entry.value,
-                      child: Text(entry.key),
-                    ))
+                .map(
+                  (entry) => PopupMenuItem(
+                    value: entry.key,
+                    child: Text(entry.value),
+                  ),
+                )
                 .toList(),
           ),
         ),
         divider8,
         ListTile(
           title: context.i18nText("font"),
-          trailing: SystemFontSelector(
-            initial: configs.font.tryGet(),
-            onFontSelected: (value) {
+          subtitle: Text(configs.font.tryGet() ?? "Default"),
+          trailing: PopupMenuButton(
+            initialValue: configs.font.tryGet(),
+            onSelected: (value) async {
+              await SystemFonts().loadFont(value);
               configs.font.write(value);
               setState(() {});
               appKey.currentState?.refreshMounted();
+            },
+            itemBuilder: (BuildContext context) {
+              var fonts = SystemFonts().getFontList();
+              fonts.sort();
+              return fonts
+                  .map(
+                    (fontName) => PopupMenuItem(
+                        value: fontName,
+                        child: FutureBuilder(
+                          future: SystemFonts().loadFont(fontName),
+                          builder: (context, snapshot) {
+                            var data = snapshot.data;
+
+                            if (data == null) {
+                              return Text(fontName);
+                            }
+                            return Text(
+                              data,
+                              style: TextStyle(fontFamily: fontName),
+                            );
+                          },
+                        )),
+                  )
+                  .toList();
             },
           ),
         )

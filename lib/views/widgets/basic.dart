@@ -75,11 +75,13 @@ class ScrollableContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: padding ?? EdgeInsets.zero,
-        child: Column(
-          children: children,
+    return SizedBox.expand(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: padding ?? EdgeInsets.zero,
+          child: Column(
+            children: children,
+          ),
         ),
       ),
     );

@@ -4,6 +4,7 @@ import 'package:arche/arche.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:superuser/superuser.dart';
 import 'package:system_fonts/system_fonts.dart';
 import 'package:wslconfigurer/i18n/i18n.dart';
@@ -158,6 +159,9 @@ class HomePageState extends State<HomePage> with RefreshMountedStateMixin {
             title: context.i18n.getOrKey("install"),
             child: const InstallPage(),
           ).toItem(icon: const Icon(Icons.install_desktop)),
+          PageContainer(
+            title: context.i18n.getOrKey("doctor"),
+          ).toItem(icon: const Icon(FontAwesomeIcons.userDoctor)),
           PageContainer(
             title: context.i18n.getOrKey("settings"),
             child: const SettingsPage(),

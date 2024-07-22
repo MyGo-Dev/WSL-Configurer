@@ -9,3 +9,7 @@ settings: 设置
 language: 语言
 font: 字体
 need_admin_permission: 需要管理员权限 (退出并右键程序 "以管理员身份运行")
+success: 成功
+error: 错误
+output: 输出
+doctor: 诊断
