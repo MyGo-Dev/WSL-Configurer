@@ -1,4 +1,5 @@
 import 'package:arche/arche.dart';
+import 'package:arche/extensions/dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:system_fonts/system_fonts.dart';
 import 'package:wslconfigurer/i18n/i18n.dart';
@@ -81,7 +82,42 @@ class _SettingsPageState extends State<SettingsPage> {
                   .toList();
             },
           ),
-        )
+        ),
+        divider8,
+        ListTile(
+          title: context.i18nText("distro_info_url"),
+          subtitle: Text(
+              configs.distroInfoUrl.getOr(AppConfigs.defaultDistroInfoUrl)),
+          trailing: IconButton(
+              onPressed: () {
+                ComplexDialog.instance
+                    .input(
+                      controller: TextEditingController(
+                          text: configs.distroInfoUrl
+                              .getOr(AppConfigs.defaultDistroInfoUrl)),
+                      context: context,
+                      title: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(4),
+                            child: IconButton(
+                              onPressed: Navigator.of(context).pop,
+                              icon: const Icon(Icons.restore),
+                            ),
+                          ),
+                          const Text("Input")
+                        ],
+                      ),
+                    )
+                    .then(
+                      (url) => setState(() {
+                        configs.distroInfoUrl
+                            .write(url ?? AppConfigs.defaultDistroInfoUrl);
+                      }),
+                    );
+              },
+              icon: const Icon(Icons.edit)),
+        ),
       ],
     );
   }

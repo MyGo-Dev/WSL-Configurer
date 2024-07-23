@@ -13,3 +13,7 @@ success: Susscess
 error: Error
 output: Output
 doctor: Doctor
+install.install_linux_distro: Install Linux Distribution
+microsoft_store: MicroSoft Store
+recommand: Recommand
+distro_info_url: Linux Distribution Info Url

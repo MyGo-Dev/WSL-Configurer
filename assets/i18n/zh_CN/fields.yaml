@@ -13,3 +13,7 @@ success: 成功
 error: 错误
 output: 输出
 doctor: 诊断
+install.install_linux_distro: 安装 Linux 发行版
+microsoft_store: 微软商店
+recommand: 推荐
+distro_info_url: Linux 发行版信息地址

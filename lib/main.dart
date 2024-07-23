@@ -22,6 +22,9 @@ void main() async {
   // Init Config
   var config = ArcheBus.bus
       .provideof(instance: AppConfigs(ArcheConfig.path("app.config.json")));
+
+  config.distroInfoUrl.getOrWrite(AppConfigs.defaultDistroInfoUrl);
+
   if (config.font.has()) {
     var font = await SystemFonts().loadFont(config.font.get());
     if (font == null) {
@@ -120,53 +123,55 @@ class HomePageState extends State<HomePage> with RefreshMountedStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return NavigationView(
-        builder: (context, vertical, horizontal, state) => Column(
-              children: [
-                Container(
-                  color: Theme.of(context).colorScheme.surfaceContainer,
-                  child: WindowTitleBarBox(
-                    child: Row(
-                      children: [
-                        Expanded(child: MoveWindow()),
-                        const WindowButtons()
-                      ],
+    return Scaffold(
+      body: NavigationView(
+          builder: (context, vertical, horizontal, state) => Column(
+                children: [
+                  Container(
+                    color: Theme.of(context).colorScheme.surfaceContainer,
+                    child: WindowTitleBarBox(
+                      child: Row(
+                        children: [
+                          Expanded(child: MoveWindow()),
+                          const WindowButtons()
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Expanded(
-                  child: Row(
-                    children: [
-                      GestureDetector(
-                        behavior: HitTestBehavior.translucent,
-                        child: horizontal(),
-                        onPanStart: (details) {
-                          appWindow.startDragging();
-                        },
-                      ),
-                      state.content
-                    ],
-                  ),
-                )
-              ],
-            ),
-        backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-        items: [
-          PageContainer(
-            title: context.i18n.getOrKey("home"),
-          ).toItem(icon: const Icon(Icons.home)),
-          PageContainer(
-            title: context.i18n.getOrKey("install"),
-            child: const InstallPage(),
-          ).toItem(icon: const Icon(Icons.install_desktop)),
-          PageContainer(
-            title: context.i18n.getOrKey("doctor"),
-          ).toItem(icon: const Icon(FontAwesomeIcons.userDoctor)),
-          PageContainer(
-            title: context.i18n.getOrKey("settings"),
-            child: const SettingsPage(),
-          ).toItem(icon: const Icon(Icons.settings)),
-        ]);
+                  Expanded(
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          child: horizontal(),
+                          onPanStart: (details) {
+                            appWindow.startDragging();
+                          },
+                        ),
+                        state.content
+                      ],
+                    ),
+                  )
+                ],
+              ),
+          backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
+          items: [
+            PageContainer(
+              title: context.i18n.getOrKey("home"),
+            ).toItem(icon: const Icon(Icons.home)),
+            PageContainer(
+              title: context.i18n.getOrKey("install"),
+              child: const InstallPage(),
+            ).toItem(icon: const Icon(Icons.install_desktop)),
+            PageContainer(
+              title: context.i18n.getOrKey("doctor"),
+            ).toItem(icon: const Icon(FontAwesomeIcons.userDoctor)),
+            PageContainer(
+              title: context.i18n.getOrKey("settings"),
+              child: const SettingsPage(),
+            ).toItem(icon: const Icon(Icons.settings)),
+          ]),
+    );
   }
 }
 
