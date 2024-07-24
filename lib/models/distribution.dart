@@ -13,6 +13,12 @@ class LinuxDistribution {
   late final String? amd64PackageUrl;
   late final String? arm64PackageUrl;
   late final String packageFamilyName;
+
+  static FutureLazyDynamicCan<List<LinuxDistribution>> distributions =
+      FutureLazyDynamicCan(
+    builder: fetch,
+  );
+
   static Future<List<LinuxDistribution>> fetch() async {
     var url = ArcheBus()
         .of<AppConfigs>()

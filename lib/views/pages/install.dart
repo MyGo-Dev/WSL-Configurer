@@ -9,7 +9,9 @@ import 'package:wslconfigurer/models/distribution.dart';
 import 'package:wslconfigurer/views/widgets/basic.dart';
 import 'package:wslconfigurer/views/widgets/divider.dart';
 import 'package:wslconfigurer/views/widgets/optfeat.dart';
+import 'package:wslconfigurer/views/widgets/process.dart';
 import 'package:wslconfigurer/windows/ms_open.dart';
+import 'package:wslconfigurer/windows/utf16.dart';
 
 class InstallPage extends StatefulWidget {
   const InstallPage({super.key});
@@ -28,13 +30,18 @@ class _InstallPageState extends State<InstallPage> {
           ListTile(
             leading: const Icon(FontAwesomeIcons.section),
             title: context.i18nText("install.install_linux_distro"),
+            trailing: IconButton(
+                onPressed: () => LinuxDistribution.distributions
+                    .reload()
+                    .then((_) => setState(() {})),
+                icon: const Icon(Icons.refresh)),
           ),
           Padding(
             padding: const EdgeInsets.all(8),
             child: Column(
               children: [
                 FutureBuilder(
-                  future: LinuxDistribution.fetch(),
+                  future: LinuxDistribution.distributions.getValue(),
                   builder: (context, snapshot) {
                     var data = snapshot.data;
                     if (data == null) {
@@ -55,42 +62,55 @@ class _InstallPageState extends State<InstallPage> {
                             children: data
                                 .map(
                                   (distro) => ListTile(
-                                      title: Text(distro.friendlyName),
-                                      trailing: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          IconButton(
-                                            onPressed: () {
-                                              var messager =
-                                                  ScaffoldMessenger.of(context);
-                                              messager.clearSnackBars();
-                                              messager.showSnackBar(
-                                                const SnackBar(
-                                                  content: Text("Copyied!"),
-                                                ),
-                                              );
+                                    title: Text(distro.friendlyName),
+                                    trailing: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        IconButton(
+                                          onPressed: () {
+                                            var messager =
+                                                ScaffoldMessenger.of(context);
+                                            messager.clearSnackBars();
+                                            messager.showSnackBar(
+                                              const SnackBar(
+                                                content: Text("Copyied!"),
+                                              ),
+                                            );
 
-                                              Clipboard.setData(ClipboardData(
-                                                  text:
-                                                      "wsl.exe --install -d ${distro.name}"));
-                                            },
-                                            icon: const Icon(Icons.copy),
-                                          ),
-                                          IconButton(
-                                            onPressed: () {
-                                              ComplexDialog.instance.text(
+                                            Clipboard.setData(ClipboardData(
+                                                text:
+                                                    "wsl.exe --install -d ${distro.name} --no-launch"));
+                                          },
+                                          icon: const Icon(Icons.copy),
+                                        ),
+                                        IconButton(
+                                          onPressed: () => ComplexDialog
+                                              .instance
+                                              .copy(barrierDismissible: false)
+                                              .text(
                                                 context: context,
-                                              );
-                                            },
-                                            icon: const Icon(Icons.terminal),
-                                          ),
-                                          IconButton(
-                                            onPressed: () => openMSStoreProduct(
-                                                distro.storeAppId),
-                                            icon: const Icon(Icons.store),
-                                          ),
-                                        ],
-                                      )),
+                                                content:
+                                                    ProcessCommandRunWidget(
+                                                  executable: "wsl.exe",
+                                                  arguments: [
+                                                    "--install",
+                                                    "-d",
+                                                    distro.name,
+                                                    "--no-launch"
+                                                  ],
+                                                  codec: utf16,
+                                                ),
+                                              ),
+                                          icon: const Icon(Icons.terminal),
+                                        ),
+                                        IconButton(
+                                          onPressed: () => openMSStoreProduct(
+                                              distro.storeAppId),
+                                          icon: const Icon(Icons.store),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 )
                                 .toList(),
                           ),

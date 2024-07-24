@@ -2,7 +2,7 @@ import 'dart:io';
 
 class WindowsSubSystemLinux {
   static void shutdown(String target, {String? distro}) async {
-    await Process.run("wsl", [
+    await Process.run("wsl.exe", [
       ...distro != null ? ["-d", distro] : [],
       "--shutdown"
     ]);
@@ -40,7 +40,7 @@ class WindowsSubSystemLinux {
   }
 
   static Future<List<String>> getAvailableDistro() async {
-    return (await Process.run("wsl", ["-l", "-q"]))
+    return (await Process.run("wsl.exe", ["-l", "-q"]))
         .stdout
         .toString()
         .split("\n")
@@ -50,7 +50,7 @@ class WindowsSubSystemLinux {
   }
 
   static List<String> getAvailableDistroSync() {
-    return Process.runSync("wsl", ["-l", "-q"])
+    return Process.runSync("wsl.exe", ["-l", "-q"])
         .stdout
         .toString()
         .split("\n")

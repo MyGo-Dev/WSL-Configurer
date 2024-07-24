@@ -96,6 +96,7 @@ class _CheckOptionalFeatureWidgetState
                                 content: SingleChildScrollView(
                                   child: ProcessText(
                                     process: process,
+                                    latest: true,
                                   ),
                                 ),
                               )
