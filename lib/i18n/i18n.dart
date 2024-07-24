@@ -12,6 +12,7 @@ class I18n {
   late final Map<String, String> _fields;
   late final Map<String, String> avaiableLanguages;
   String locale = "en_US";
+  late final LazyDynamicCan<StringTranslator<ThemeMode>> themeModeTranslator;
 
   Map<K, V> _load<K, V>(String data) => Map.from(loadYaml(data));
 
@@ -22,6 +23,18 @@ class I18n {
     }
 
     _fields = _load(await rootBundle.loadString(fileName("fields.yaml")));
+    _initLazyCans();
+  }
+
+  void _initLazyCans() {
+    themeModeTranslator = LazyDynamicCan(
+      builder: () => StringTranslator(ThemeMode.values)
+          .translate(ThemeMode.light, getOrKey("thememode.light"))
+          .translate(ThemeMode.dark, getOrKey("thememode.dark"))
+          .defaultValue(
+            getOrKey("thememode.system"),
+          ),
+    );
   }
 
   String fileName(String fileName) => i18nLanguageFile(locale, fileName);

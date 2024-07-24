@@ -83,6 +83,26 @@ class _SettingsPageState extends State<SettingsPage> {
             },
           ),
         ),
+        ListTile(
+          title: context.i18nText("theme"),
+          subtitle: Text(context.i18n.themeModeTranslator.value
+              .translation(configs.themeMode.getOr(ThemeMode.system))!),
+          trailing: PopupMenuButton(
+            initialValue: configs.themeMode.getOr(ThemeMode.system),
+            onSelected: (value) {
+              configs.themeMode.write(value);
+              setState(() {});
+              appKey.currentState?.refreshMounted();
+            },
+            itemBuilder: (context) => ThemeMode.values
+                .map((themeMode) => PopupMenuItem(
+                      value: themeMode,
+                      child: Text(context.i18n.themeModeTranslator.value
+                          .translation(themeMode)!),
+                    ))
+                .toList(),
+          ),
+        ),
         divider8,
         ListTile(
           title: context.i18nText("distro_info_url"),

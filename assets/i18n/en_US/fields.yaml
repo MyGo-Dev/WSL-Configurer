@@ -1,8 +1,5 @@
 home: Home
-install: Install
 settings: Settings
-install.prepare: Prepare
-install.auto_install: Auto Install (Admin)
 open: Open
 configure: Configure
 optional_features: Optional Features
@@ -13,7 +10,18 @@ success: Susscess
 error: Error
 output: Output
 doctor: Doctor
-install.install_linux_distro: Install Linux Distribution
 microsoft_store: MicroSoft Store
 recommand: Recommand
 distro_info_url: Linux Distribution Info Url
+theme: Theme
+thememode.dark: Dark
+thememode.system: System
+thememode.light: Light
+manage: Manage
+
+install: Install
+install.prepare: Prepare
+install.auto_install: Auto Install (Admin)
+install.install_linux_distro: Install Linux Distribution
+install.online: Install Online
+install.file: Import from File

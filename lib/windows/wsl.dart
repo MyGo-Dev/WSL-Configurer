@@ -1,6 +1,10 @@
 import 'dart:io';
 
+import 'package:wslconfigurer/windows/utf16.dart';
+
 class WindowsSubSystemLinux {
+  static const encoding = utf16;
+
   static void shutdown(String target, {String? distro}) async {
     await Process.run("wsl.exe", [
       ...distro != null ? ["-d", distro] : [],
@@ -40,7 +44,8 @@ class WindowsSubSystemLinux {
   }
 
   static Future<List<String>> getAvailableDistro() async {
-    return (await Process.run("wsl.exe", ["-l", "-q"]))
+    return (await Process.run("wsl.exe", ["-l", "-q"],
+            stdoutEncoding: encoding))
         .stdout
         .toString()
         .split("\n")
@@ -50,7 +55,7 @@ class WindowsSubSystemLinux {
   }
 
   static List<String> getAvailableDistroSync() {
-    return Process.runSync("wsl.exe", ["-l", "-q"])
+    return Process.runSync("wsl.exe", ["-l", "-q"], stdoutEncoding: encoding)
         .stdout
         .toString()
         .split("\n")

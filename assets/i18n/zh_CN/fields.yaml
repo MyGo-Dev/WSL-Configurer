@@ -1,7 +1,4 @@
 home: 主页
-install: 安装
-install.prepare: 准备
-install.auto_install: 自动安装 (管理员)
 open: 打开
 configure: 配置
 optional_features: 可选功能
@@ -13,7 +10,18 @@ success: 成功
 error: 错误
 output: 输出
 doctor: 诊断
-install.install_linux_distro: 安装 Linux 发行版
 microsoft_store: 微软商店
 recommand: 推荐
 distro_info_url: Linux 发行版信息地址
+theme: 主题
+thememode.dark: 深色
+thememode.system: 跟随系统
+thememode.light: 浅色
+manage: 管理
+
+install: 安装
+install.prepare: 准备
+install.auto_install: 自动安装 (管理员)
+install.install_linux_distro: 安装 Linux 发行版
+install.online: 在线安装
+install.file: 从文件导入

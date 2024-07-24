@@ -88,7 +88,7 @@ class MyAppState extends State<MyApp> with RefreshMountedStateMixin {
           ),
         ),
         debugShowCheckedModeBanner: false,
-        themeMode: ThemeMode.system,
+        themeMode: configs.themeMode.getOrWrite(ThemeMode.system),
       ),
     );
   }
@@ -163,6 +163,9 @@ class HomePageState extends State<HomePage> with RefreshMountedStateMixin {
               title: context.i18n.getOrKey("install"),
               child: const InstallPage(),
             ).toItem(icon: const Icon(Icons.install_desktop)),
+            PageContainer(
+              title: context.i18n.getOrKey("manage"),
+            ).toItem(icon: const Icon(Icons.apps)),
             PageContainer(
               title: context.i18n.getOrKey("doctor"),
             ).toItem(icon: const Icon(FontAwesomeIcons.userDoctor)),

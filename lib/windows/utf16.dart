@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:flutter/services.dart';
-
 const utf16 = Utf16Codec();
 
 final class Utf16Codec extends Encoding {

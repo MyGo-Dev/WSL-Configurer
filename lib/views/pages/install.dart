@@ -30,16 +30,18 @@ class _InstallPageState extends State<InstallPage> {
           ListTile(
             leading: const Icon(FontAwesomeIcons.section),
             title: context.i18nText("install.install_linux_distro"),
-            trailing: IconButton(
-                onPressed: () => LinuxDistribution.distributions
-                    .reload()
-                    .then((_) => setState(() {})),
-                icon: const Icon(Icons.refresh)),
           ),
           Padding(
             padding: const EdgeInsets.all(8),
             child: Column(
               children: [
+                ListTile(
+                    title: context.i18nText("install.online"),
+                    trailing: IconButton(
+                        onPressed: () => LinuxDistribution.distributions
+                            .reload()
+                            .then((_) => setState(() {})),
+                        icon: const Icon(Icons.refresh))),
                 FutureBuilder(
                   future: LinuxDistribution.distributions.getValue(),
                   builder: (context, snapshot) {
@@ -119,14 +121,44 @@ class _InstallPageState extends State<InstallPage> {
                     );
                   },
                 ),
-                const ListTile(
-                  title: Text("Install from File"),
-                  trailing: Text("TODO"),
+                ListTile(
+                  title: context.i18nText("install.file"),
+                  trailing: const Text("TODO"),
                 ),
+                const Card.filled(
+                  child: Column(
+                    children: [
+                      ListTile(
+                        title: Text("Import from tar"),
+                        trailing: IconButton(
+                            onPressed: null, icon: Icon(Icons.file_open)),
+                      ),
+                      ListTile(
+                        title: Text("Import from vhdx"),
+                        trailing: IconButton(
+                            onPressed: null, icon: Icon(Icons.file_open)),
+                      )
+                    ],
+                  ),
+                ),
+                divider8,
                 const ListTile(
+                  leading: Icon(FontAwesomeIcons.section),
                   title: Text("Upgrade to WSL2"),
                   trailing: Text("TODO"),
                 ),
+                const Card.filled(
+                  child: Column(
+                    children: [
+                      ListTile(
+                        title: Text("Mannual"),
+                      ),
+                      ListTile(
+                        title: Text("Automate"),
+                      )
+                    ],
+                  ),
+                )
               ],
             ),
           ),

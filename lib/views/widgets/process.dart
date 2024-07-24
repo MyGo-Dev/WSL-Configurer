@@ -20,7 +20,7 @@ class ProcessText extends StatefulWidget {
 }
 
 class _ProcessTextState extends State<ProcessText> {
-  List<(bool, String)> span = [];
+  List<(bool, String)> text = [];
 
   @override
   void initState() {
@@ -30,33 +30,33 @@ class _ProcessTextState extends State<ProcessText> {
 
     process.stderr.listen(
       (data) => setState(() {
-        span.add((true, widget.codec.decode(data).trim()));
+        text.add((true, widget.codec.decode(data).trim()));
       }),
     );
     process.stdout.listen(
       (data) => setState(() {
-        span.add((false, widget.codec.decode(data).trim()));
+        text.add((false, widget.codec.decode(data).trim()));
       }),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    if (span.isEmpty) {
+    if (text.isEmpty) {
       return const SizedBox.shrink();
     }
 
     if (widget.latest) {
-      return span.lastOrNull == null
+      return text.lastOrNull == null
           ? const Text("")
           : SelectableText(
-              span.last.$2,
-              style: span.last.$1 ? const TextStyle(color: Colors.red) : null,
+              text.last.$2,
+              style: text.last.$1 ? const TextStyle(color: Colors.red) : null,
             );
     }
 
     return Column(
-      children: span
+      children: text
           .map((data) => SelectableText(data.$2,
               style: data.$1 ? const TextStyle(color: Colors.red) : null))
           .toList(),
