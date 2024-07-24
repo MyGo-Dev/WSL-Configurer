@@ -1,9 +1,12 @@
 import 'package:arche/arche.dart';
 
 class AppConfigs {
-  final ConfigEntry<T> Function<T>(String key) _generator;
-  AppConfigs(ArcheConfig config)
-      : _generator = ConfigEntry.withConfig(config, generateMap: true);
+  final ConfigEntryGenerator _generator;
+  AppConfigs(ArcheConfig config, [bool generateMap = true])
+      : _generator = ConfigEntry.withConfig(
+          config,
+          generateMap: generateMap,
+        );
 
   ConfigEntry<String> get locale => _generator("locale");
   ConfigEntry<String> get font => _generator("font");
