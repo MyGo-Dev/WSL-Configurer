@@ -182,27 +182,6 @@ class _InstallPageState extends State<InstallPage> {
               ),
             ],
           ),
-          divider8,
-          ListTile(
-            leading: const Icon(FontAwesomeIcons.section),
-            title: context.i18nText("Install Essential Packages(Optional)"),
-          ),
-          Card.filled(
-            child: Column(
-              children: [
-                ListTile(
-                  title: const Text("C (GCC)"),
-                  trailing: IconButton(
-                      onPressed: () {}, icon: const Icon(Icons.copy)),
-                ),
-                ListTile(
-                  title: const Text("C (Clang)"),
-                  trailing: IconButton(
-                      onPressed: () {}, icon: const Icon(Icons.copy)),
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );
