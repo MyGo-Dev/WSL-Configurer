@@ -25,3 +25,6 @@ install.auto_install: Auto Install (Admin)
 install.install_linux_distro: Install Linux Distribution
 install.online: Install Online
 install.file: Import from File
+install.upgrade_wsl2_kernel: Upgrade WSL2 Linux Kernel
+install.manual: Manual Install
+install.automate: Automate Install

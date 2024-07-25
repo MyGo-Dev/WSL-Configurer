@@ -50,3 +50,4 @@ target/
 */**/messages/
 
 app.config.json
+*.msi

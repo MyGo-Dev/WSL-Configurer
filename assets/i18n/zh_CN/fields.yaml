@@ -25,3 +25,6 @@ install.auto_install: 自动安装 (管理员)
 install.install_linux_distro: 安装 Linux 发行版
 install.online: 在线安装
 install.file: 从文件导入
+install.upgrade_wsl2_kernel: 更新 WSL2 Linux 内核
+install.manual: 手动安装
+install.automate: 自动安装
