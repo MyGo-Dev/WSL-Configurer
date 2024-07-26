@@ -21,11 +21,31 @@ class Utf16Decoder extends Converter<List<int>, String> {
     return String.fromCharCodes(
         Uint16List.sublistView(Uint8List.fromList(input)));
   }
+
+  @override
+  Sink<List<int>> startChunkedConversion(Sink<String> sink) => _Utf16Sink(
+      sink is StringConversionSink ? sink : StringConversionSink.from(sink));
 }
 
 class Utf16Encoder extends Converter<String, List<int>> {
   @override
   List<int> convert(String input) {
-    return input.codeUnits;
+    return Uint8List.sublistView(Uint16List.fromList(input.codeUnits));
+  }
+}
+
+class _Utf16Sink extends ByteConversionSinkBase {
+  final StringConversionSink output;
+
+  const _Utf16Sink(this.output);
+
+  @override
+  void add(List<int> chunk) {
+    output.add(utf16.decode(chunk));
+  }
+
+  @override
+  void close() {
+    output.close();
   }
 }

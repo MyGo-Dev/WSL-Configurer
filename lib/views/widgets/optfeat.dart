@@ -30,7 +30,11 @@ class _CheckOptionalFeatureWidgetState
       AsyncSnapshot<RustSignal<OptionFeatures>> snapshot) {
     var signal = snapshot.data;
     if (signal == null) {
-      return const CircularProgressIndicator();
+      return const SizedBox.expand(
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
     }
 
     var feats = signal.message.features;

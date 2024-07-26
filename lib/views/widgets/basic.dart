@@ -35,10 +35,9 @@ class PageContainer extends StatelessWidget {
                 forceMaterialTransparency: true,
                 title: Text(title!),
               ),
-        body: Card(
-          elevation: 0.5,
-          margin: const EdgeInsets.only(right: 20, bottom: 20),
-          child: SizedBox.expand(
+        body: Padding(
+          padding: const EdgeInsets.only(right: 20, bottom: 20),
+          child: RRectCountainer(
             child: child,
           ),
         ),
@@ -82,6 +81,28 @@ class ScrollableContainer extends StatelessWidget {
           child: Column(
             children: children,
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class RRectCountainer extends StatelessWidget {
+  final Widget? child;
+  const RRectCountainer({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surfaceContainerLow,
+        shape: BoxShape.rectangle,
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+      ),
+      child: SizedBox.expand(
+        child: Align(
+          alignment: Alignment.topLeft,
+          child: child,
         ),
       ),
     );
