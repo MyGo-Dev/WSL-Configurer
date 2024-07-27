@@ -15,7 +15,22 @@ class _DistributionManagePageState extends State<DistributionManagePage> {
   String? current;
   Widget buildWidget() {
     if (current != null) {
-      return DistroManagePage(distro: current!);
+      return Padding(
+        padding: const EdgeInsets.all(8),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            leading: BackButton(
+              onPressed: () => setState(() {
+                current = null;
+              }),
+            ),
+            title: Text(current!),
+          ),
+          body: DistroManagePage(distro: current!),
+        ),
+      );
     }
 
     return FutureBuilder(

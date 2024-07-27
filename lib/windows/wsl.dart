@@ -63,4 +63,21 @@ class WindowsSubSystemLinux {
         .where((line) => line.isNotEmpty)
         .toList();
   }
+
+  static Future<Process> start({
+    Iterable<String> args = const [],
+    String? distro,
+    String? user,
+  }) async {
+    return Process.start(
+      "start",
+      [
+        "wsl.exe",
+        ...distro != null ? ["-d", distro] : [],
+        ...user != null ? ["-u", user] : [],
+        ...args
+      ],
+      runInShell: true,
+    );
+  }
 }
