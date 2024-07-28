@@ -25,8 +25,79 @@ class InstallPage extends StatefulWidget {
 }
 
 class _InstallPageState extends State<InstallPage> {
+  Widget buildDistributions(Iterable<LinuxDistribution> data) {
+    return Card.filled(
+      child: AnimationLimiter(
+        child: Column(
+          children: AnimationConfiguration.toStaggeredList(
+            duration: const Duration(milliseconds: 375),
+            childAnimationBuilder: (widget) => SlideAnimation(
+              horizontalOffset: 50.0,
+              child: FadeInAnimation(
+                child: widget,
+              ),
+            ),
+            children: data
+                .map(
+                  (distro) => ListTile(
+                    title: Text(distro.friendlyName),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            var messager = ScaffoldMessenger.of(context);
+                            messager.clearSnackBars();
+                            messager.showSnackBar(
+                              const SnackBar(
+                                content: Text("Copyied!"),
+                              ),
+                            );
+
+                            Clipboard.setData(ClipboardData(
+                                text:
+                                    "wsl.exe --install -d ${distro.name} --no-launch"));
+                          },
+                          icon: const Icon(Icons.copy),
+                        ),
+                        IconButton(
+                          onPressed: () => ComplexDialog.instance
+                              .copy(barrierDismissible: false)
+                              .text(
+                                context: context,
+                                content: ProcessCommandRunWidget(
+                                  executable: "wsl.exe",
+                                  arguments: [
+                                    "--install",
+                                    "-d",
+                                    distro.name,
+                                    "--no-launch"
+                                  ],
+                                  codec: utf16,
+                                ),
+                              ),
+                          icon: const Icon(Icons.terminal),
+                        ),
+                        IconButton(
+                          onPressed: () =>
+                              openMSStoreProduct(distro.storeAppId),
+                          icon: const Icon(Icons.store),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    var distributions = LinuxDistribution.distributions.getValue();
+
     return CheckOptionalFeatureWidget(
       nextWidget: ScrollableContainer(
         padding: const EdgeInsets.all(8),
@@ -83,83 +154,18 @@ class _InstallPageState extends State<InstallPage> {
                           .reload()
                           .then((_) => setState(() {})),
                       icon: const Icon(Icons.refresh))),
-              FutureBuilder(
-                future: LinuxDistribution.distributions.getValue(),
-                builder: (context, snapshot) {
-                  var data = snapshot.data;
-                  if (data == null) {
-                    return const CircularProgressIndicator();
-                  }
-
-                  return Card.filled(
-                    child: AnimationLimiter(
-                      child: Column(
-                        children: AnimationConfiguration.toStaggeredList(
-                          duration: const Duration(milliseconds: 375),
-                          childAnimationBuilder: (widget) => SlideAnimation(
-                            horizontalOffset: 50.0,
-                            child: FadeInAnimation(
-                              child: widget,
-                            ),
-                          ),
-                          children: data
-                              .map(
-                                (distro) => ListTile(
-                                  title: Text(distro.friendlyName),
-                                  trailing: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      IconButton(
-                                        onPressed: () {
-                                          var messager =
-                                              ScaffoldMessenger.of(context);
-                                          messager.clearSnackBars();
-                                          messager.showSnackBar(
-                                            const SnackBar(
-                                              content: Text("Copyied!"),
-                                            ),
-                                          );
-
-                                          Clipboard.setData(ClipboardData(
-                                              text:
-                                                  "wsl.exe --install -d ${distro.name} --no-launch"));
-                                        },
-                                        icon: const Icon(Icons.copy),
-                                      ),
-                                      IconButton(
-                                        onPressed: () => ComplexDialog.instance
-                                            .copy(barrierDismissible: false)
-                                            .text(
-                                              context: context,
-                                              content: ProcessCommandRunWidget(
-                                                executable: "wsl.exe",
-                                                arguments: [
-                                                  "--install",
-                                                  "-d",
-                                                  distro.name,
-                                                  "--no-launch"
-                                                ],
-                                                codec: utf16,
-                                              ),
-                                            ),
-                                        icon: const Icon(Icons.terminal),
-                                      ),
-                                      IconButton(
-                                        onPressed: () => openMSStoreProduct(
-                                            distro.storeAppId),
-                                        icon: const Icon(Icons.store),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              )
-                              .toList(),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
+              distributions is Future<List<LinuxDistribution>>
+                  ? FutureBuilder(
+                      future: distributions,
+                      builder: (context, snapshot) {
+                        var data = snapshot.data;
+                        if (data == null) {
+                          return const CircularProgressIndicator();
+                        }
+                        return buildDistributions(data);
+                      },
+                    )
+                  : buildDistributions(distributions),
               ListTile(
                 title: context.i18nText("install.file"),
                 trailing: const Text("TODO"),

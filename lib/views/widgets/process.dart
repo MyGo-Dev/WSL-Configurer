@@ -21,7 +21,6 @@ class ProcessText extends StatefulWidget {
 
 class _ProcessTextState extends State<ProcessText> {
   List<(bool, String)> text = [];
-
   @override
   void initState() {
     super.initState();
@@ -41,6 +40,11 @@ class _ProcessTextState extends State<ProcessText> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     if (text.isEmpty) {
       return const SizedBox.shrink();
@@ -55,11 +59,20 @@ class _ProcessTextState extends State<ProcessText> {
             );
     }
 
-    return Column(
-      children: text
-          .map((data) => SelectableText(data.$2,
-              style: data.$1 ? const TextStyle(color: Colors.red) : null))
-          .toList(),
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: text
+                .map((data) => SelectableText(data.$2,
+                    maxLines: null,
+                    style: data.$1 ? const TextStyle(color: Colors.red) : null))
+                .toList(),
+          ),
+        )
+      ],
     );
   }
 }

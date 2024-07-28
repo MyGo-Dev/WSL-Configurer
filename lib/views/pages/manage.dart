@@ -12,7 +12,8 @@ class DistributionManagePage extends StatefulWidget {
 }
 
 class _DistributionManagePageState extends State<DistributionManagePage> {
-  String? current;
+  static String? current;
+
   Widget buildWidget() {
     if (current != null) {
       return Padding(
@@ -20,13 +21,15 @@ class _DistributionManagePageState extends State<DistributionManagePage> {
         child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
+            forceMaterialTransparency: true,
             backgroundColor: Colors.transparent,
-            leading: BackButton(
-              onPressed: () => setState(() {
-                current = null;
-              }),
-            ),
             title: Text(current!),
+          ),
+          floatingActionButton: FloatingActionButton(
+            child: const Icon(Icons.arrow_back),
+            onPressed: () => setState(() {
+              current = null;
+            }),
           ),
           body: DistroManagePage(distro: current!),
         ),
