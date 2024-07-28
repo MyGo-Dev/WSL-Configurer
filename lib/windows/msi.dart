@@ -20,14 +20,14 @@ enum DisplayMode {
   qf,
 }
 
-Future<Process> msiexec(
+Future<ProcessResult> msiexec(
   String path, {
   Iterable<String> arguments = const [],
   String? logPath,
   DisplayMode displayMode = DisplayMode.quiet,
   RestartMode restartMode = RestartMode.norestart,
 }) async {
-  return await Process.start(
+  return await Process.run(
     "msiexec",
     [
       "/i",
@@ -37,7 +37,6 @@ Future<Process> msiexec(
       ...arguments,
       ...logPath != null ? ["/log", logPath] : []
     ],
-    mode: ProcessStartMode.detached,
   );
 }
 
@@ -73,17 +72,17 @@ void downloadMSIexec(
       onDone();
     }
 
-    await msiexec(
+    msiexec(
       filePath,
       arguments: arguments,
       logPath: logPath,
       displayMode: displayMode,
       restartMode: restartMode,
-    );
-
-    if (afterInstall != null) {
-      afterInstall();
-    }
+    ).then((_) {
+      if (afterInstall != null) {
+        afterInstall();
+      }
+    });
   });
 }
 
