@@ -17,7 +17,6 @@ theme: Theme
 thememode.dark: Dark
 thememode.system: System
 thememode.light: Light
-manage: Manage
 
 install: Install
 install.prepare: Prepare
@@ -28,3 +27,8 @@ install.file: Import from File
 install.upgrade_wsl2_kernel: Upgrade WSL2 Linux Kernel
 install.manual: Manual Install
 install.automate: Automate Install
+
+manage: Manage
+manage.execute: Execute
+manage.terminal: Terminal
+manage.root: (root)

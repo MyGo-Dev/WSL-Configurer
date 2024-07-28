@@ -17,7 +17,6 @@ theme: 主题
 thememode.dark: 深色
 thememode.system: 跟随系统
 thememode.light: 浅色
-manage: 管理
 
 install: 安装
 install.prepare: 准备
@@ -28,3 +27,8 @@ install.file: 从文件导入
 install.upgrade_wsl2_kernel: 更新 WSL2 Linux 内核
 install.manual: 手动安装
 install.automate: 自动安装
+
+manage: 管理
+manage.execute: 执行
+manage.terminal: 终端
+manage.root: (root)

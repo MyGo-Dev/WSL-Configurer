@@ -75,6 +75,8 @@ class WindowsSubSystemLinux {
         "wsl.exe",
         ...distro != null ? ["-d", distro] : [],
         ...user != null ? ["-u", user] : [],
+        "--cd",
+        "~",
         ...args
       ],
       runInShell: true,

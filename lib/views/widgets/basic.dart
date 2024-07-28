@@ -108,3 +108,13 @@ class RRectCountainer extends StatelessWidget {
     );
   }
 }
+
+class WidthInfCenterWidget extends StatelessWidget {
+  final Widget child;
+  const WidthInfCenterWidget({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(width: double.infinity, child: Center(child: child));
+  }
+}
