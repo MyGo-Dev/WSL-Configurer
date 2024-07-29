@@ -48,97 +48,114 @@ class _DistroManagePageState extends State<DistroManagePage>
 
   @override
   Widget build(BuildContext context) {
-    return AnimationLimiter(
-      child: ListView(
-        children: [
-          Card.filled(
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Column(
-                children: [
-                  FilledButton(
-                    onPressed: () =>
-                        WindowsSubSystemLinux.start(distro: widget.distro),
-                    child: WidthInfCenterWidget(
-                      child: context.i18nText("manage.terminal"),
-                    ),
-                  ),
-                  FilledButton(
-                    onPressed: () => WindowsSubSystemLinux.start(
-                      distro: widget.distro,
-                      user: "root",
-                    ),
-                    child: WidthInfCenterWidget(
-                      child: Text(context.i18n.getOrKey("manage.terminal") +
-                          context.i18n.getOrKey("manage.root")),
-                    ),
-                  )
-                ].eachPadding(),
-              ),
-            ),
-          ),
-          Card.filled(
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Column(
-                children: [
-                  TextField(
-                    controller: exec,
-                    decoration:
-                        const InputDecoration(border: OutlineInputBorder()),
-                  ),
-                  FilledButton(
-                    onPressed: () => WindowsSubSystemLinux.exec(
-                      distro: widget.distro,
-                      commands: exec.text.split(" "),
-                    ).then(
-                      (value) => refreshMountedFn(() => process = value),
-                    ),
-                    child: WidthInfCenterWidget(
-                      child: context.i18nText("manage.execute"),
-                    ),
-                  ),
-                  FilledButton(
-                    onPressed: () => WindowsSubSystemLinux.exec(
-                      distro: widget.distro,
-                      commands: exec.text.split(" "),
-                    ).then(
-                      (value) => refreshMountedFn(() => process = value),
-                    ),
-                    child: WidthInfCenterWidget(
-                      child: Text(context.i18n.getOrKey("manage.execute") +
-                          context.i18n.getOrKey("manage.root")),
-                    ),
-                  ),
-                  process != null
-                      ? ProcessText(
-                          key: ValueKey(process),
-                          process: process!,
-                          codec: utf8,
+    return NavigationView(
+      backgroundColor: Colors.transparent,
+      labelType: NavigationLabelType.selected,
+      items: [
+        NavigationItem(
+          icon: Icon(Icons.terminal),
+          label: "Manage",
+          page: AnimationLimiter(
+            child: ListView(
+              children: [
+                Card.filled(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Column(
+                      children: [
+                        FilledButton(
+                          onPressed: () => WindowsSubSystemLinux.start(
+                              distro: widget.distro),
+                          child: WidthInfCenterWidget(
+                            child: context.i18nText("manage.terminal"),
+                          ),
+                        ),
+                        FilledButton(
+                          onPressed: () => WindowsSubSystemLinux.start(
+                            distro: widget.distro,
+                            user: "root",
+                          ),
+                          child: WidthInfCenterWidget(
+                            child: Text(
+                                context.i18n.getOrKey("manage.terminal") +
+                                    context.i18n.getOrKey("manage.root")),
+                          ),
                         )
-                      : const SizedBox.shrink(),
-                ].eachPadding(),
-              ),
-            ),
-          ),
-          Card.filled(
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: WSLExplorerWidget(distro: widget.distro),
-            ),
-          ),
-        ].enumerate(
-          (index, widget) => AnimationConfiguration.staggeredList(
-            position: index,
-            child: SlideAnimation(
-              child: Padding(
-                padding: const EdgeInsets.all(4),
-                child: widget,
+                      ].eachPadding(),
+                    ),
+                  ),
+                ),
+                Card.filled(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Column(
+                      children: [
+                        TextField(
+                          controller: exec,
+                          decoration: const InputDecoration(
+                              border: OutlineInputBorder()),
+                        ),
+                        FilledButton(
+                          onPressed: () => WindowsSubSystemLinux.exec(
+                            distro: widget.distro,
+                            commands: exec.text.split(" "),
+                          ).then(
+                            (value) => refreshMountedFn(() => process = value),
+                          ),
+                          child: WidthInfCenterWidget(
+                            child: context.i18nText("manage.execute"),
+                          ),
+                        ),
+                        FilledButton(
+                          onPressed: () => WindowsSubSystemLinux.exec(
+                            distro: widget.distro,
+                            commands: exec.text.split(" "),
+                          ).then(
+                            (value) => refreshMountedFn(() => process = value),
+                          ),
+                          child: WidthInfCenterWidget(
+                            child: Text(
+                                context.i18n.getOrKey("manage.execute") +
+                                    context.i18n.getOrKey("manage.root")),
+                          ),
+                        ),
+                        process != null
+                            ? ProcessText(
+                                key: ValueKey(process),
+                                process: process!,
+                                codec: utf8,
+                              )
+                            : const SizedBox.shrink(),
+                      ].eachPadding(),
+                    ),
+                  ),
+                ),
+              ].enumerate(
+                (index, widget) => AnimationConfiguration.staggeredList(
+                  position: index,
+                  child: SlideAnimation(
+                    child: Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: widget,
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
         ),
-      ),
+        NavigationItem(
+          icon: const Icon(Icons.folder),
+          page: ListView(children: [
+            Padding(
+              padding: const EdgeInsets.all(8),
+              child: WSLExplorerWidget(distro: widget.distro),
+            ),
+          ]),
+          label: "File",
+        )
+      ],
+      direction: Axis.horizontal,
     );
   }
 }
