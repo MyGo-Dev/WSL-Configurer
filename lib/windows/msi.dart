@@ -111,7 +111,7 @@ class DownloadMSIProgressDialog extends StatefulWidget {
 
 class DownloadMSIProgressDialogState extends State<DownloadMSIProgressDialog> {
   bool afterInstall = false;
-  String text = "Prepare Install";
+  String text = "Waiting...";
   double? progress;
   @override
   void initState() {
@@ -131,7 +131,7 @@ class DownloadMSIProgressDialogState extends State<DownloadMSIProgressDialog> {
       onDone: () {
         setState(() {
           progress = null;
-          text = "Install...";
+          text = context.i18n.getOrKey("install.automate");
         });
       },
       afterInstall: () {
