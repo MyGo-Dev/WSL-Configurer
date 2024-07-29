@@ -5,6 +5,8 @@ import 'package:arche/arche.dart';
 import 'package:arche/extensions/iter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:path/path.dart';
 import 'package:wslconfigurer/i18n/i18n.dart';
 import 'package:wslconfigurer/views/widgets/basic.dart';
 import 'package:wslconfigurer/views/widgets/extension.dart';
@@ -119,6 +121,12 @@ class _DistroManagePageState extends State<DistroManagePage>
               ),
             ),
           ),
+          Card.filled(
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: WSLExplorerWidget(distro: widget.distro),
+            ),
+          ),
         ].enumerate(
           (index, widget) => AnimationConfiguration.staggeredList(
             position: index,
@@ -131,6 +139,106 @@ class _DistroManagePageState extends State<DistroManagePage>
           ),
         ),
       ),
+    );
+  }
+}
+
+class WSLExplorerWidget extends StatefulWidget {
+  final String distro;
+  const WSLExplorerWidget({super.key, required this.distro});
+
+  @override
+  State<StatefulWidget> createState() => _WSLExplorerWidgetState();
+}
+
+class _WSLExplorerWidgetState extends State<WSLExplorerWidget>
+    with RefreshMountedStateMixin {
+  late WSLExplorer explorer;
+  List<FileSystemEntity> current = [];
+  @override
+  void initState() {
+    super.initState();
+
+    explorer = WSLExplorer(widget.distro);
+    listExplorer();
+  }
+
+  void listExplorer() {
+    current.clear();
+
+    explorer.list().listen((data) => refreshMountedFn(() => current.add(data)),
+        onDone: () => refreshMountedFn(
+            () => current.sort((a, b) => a.path.compareTo(b.path))));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      key: ValueKey(explorer.current),
+      children: [
+        ...explorer.isRoot
+            ? []
+            : [
+                ListTile(
+                    title: const Text(".."),
+                    onTap: () {
+                      explorer.parent();
+                      listExplorer();
+                    },
+                    shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8))))
+              ],
+        ...current.map<Widget>((entity) {
+          var entityBaseName = basename(entity.path);
+          var friendlyName =
+              entity.path.replaceFirst(explorer.root, "").replaceAll("\\", "/");
+          return FutureBuilder(
+            future: entity.stat(),
+            builder: (context, snapshot) {
+              var data = snapshot.data;
+              if (data == null) {
+                return ListTile(
+                  leading: const Icon(Icons.question_mark),
+                  title: Text(entityBaseName),
+                  subtitle: Text(friendlyName),
+                );
+              }
+
+              IconData icon;
+              Function()? onTap;
+
+              switch (data.type) {
+                case FileSystemEntityType.file:
+                  icon = FontAwesomeIcons.file;
+                  break;
+                case FileSystemEntityType.directory:
+                  icon = Icons.folder;
+                  onTap = () async {
+                    await explorer.move(entity.path);
+                    listExplorer();
+                  };
+                  break;
+                case FileSystemEntityType.link:
+                  icon = Icons.link;
+                  break;
+                case FileSystemEntityType.notFound:
+                  icon = Icons.security;
+                default:
+                  icon = Icons.question_mark;
+              }
+
+              return ListTile(
+                leading: Icon(icon),
+                title: Text(entityBaseName),
+                subtitle: Text(friendlyName),
+                onTap: onTap,
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(8))),
+              );
+            },
+          );
+        }),
+      ],
     );
   }
 }

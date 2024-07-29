@@ -21,15 +21,14 @@ class _DistributionManagePageState extends State<DistributionManagePage> {
         child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
+            leading: BackButton(
+              onPressed: () => setState(() {
+                current = null;
+              }),
+            ),
             forceMaterialTransparency: true,
             backgroundColor: Colors.transparent,
             title: Text(current!),
-          ),
-          floatingActionButton: FloatingActionButton(
-            child: const Icon(Icons.arrow_back),
-            onPressed: () => setState(() {
-              current = null;
-            }),
           ),
           body: DistroManagePage(distro: current!),
         ),

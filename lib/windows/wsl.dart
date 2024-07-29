@@ -83,3 +83,33 @@ class WindowsSubSystemLinux {
     );
   }
 }
+
+class WSLExplorer {
+  final String distro;
+  late final String root;
+  late Directory current;
+
+  WSLExplorer(this.distro) {
+    root = "//wsl.localhost/$distro";
+    current = Directory("$root/home");
+  }
+
+  Stream<FileSystemEntity> list() {
+    return current.list();
+  }
+
+  bool get isRoot => current.path == root;
+
+  Future<bool> move(String path) async {
+    var target = Directory(path);
+    if (await target.exists()) {
+      current = target;
+      return true;
+    }
+    return false;
+  }
+
+  void parent() {
+    current = current.parent;
+  }
+}
