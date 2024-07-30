@@ -11,6 +11,7 @@ import 'package:wslconfigurer/i18n/i18n.dart';
 import 'package:wslconfigurer/views/widgets/basic.dart';
 import 'package:wslconfigurer/views/widgets/extension.dart';
 import 'package:wslconfigurer/views/widgets/process.dart';
+import 'package:wslconfigurer/windows/ms_open.dart';
 import 'package:wslconfigurer/windows/wsl.dart';
 
 class DistroManagePage extends StatefulWidget {
@@ -53,8 +54,8 @@ class _DistroManagePageState extends State<DistroManagePage>
       labelType: NavigationLabelType.selected,
       items: [
         NavigationItem(
-          icon: Icon(Icons.terminal),
-          label: "Manage",
+          icon: const Icon(Icons.home),
+          label: context.i18n.getOrKey("home"),
           page: AnimationLimiter(
             child: ListView(
               children: [
@@ -77,7 +78,7 @@ class _DistroManagePageState extends State<DistroManagePage>
                           ),
                           child: WidthInfCenterWidget(
                             child: Text(
-                                context.i18n.getOrKey("manage.terminal") +
+                                context.i18n.getOrKey("manage.open_terminal") +
                                     context.i18n.getOrKey("manage.root")),
                           ),
                         )
@@ -145,6 +146,12 @@ class _DistroManagePageState extends State<DistroManagePage>
           ),
         ),
         NavigationItem(
+            icon: const Icon(Icons.terminal),
+            label: context.i18n.getOrKey("manage.terminal"),
+            page: WSLTerminalWidget(
+              distro: widget.distro,
+            )),
+        NavigationItem(
           icon: const Icon(Icons.folder),
           page: ListView(children: [
             Padding(
@@ -152,10 +159,46 @@ class _DistroManagePageState extends State<DistroManagePage>
               child: WSLExplorerWidget(distro: widget.distro),
             ),
           ]),
-          label: "File",
+          label: context.i18n.getOrKey("manage.file"),
         )
       ],
       direction: Axis.horizontal,
+    );
+  }
+}
+
+class WSLTerminalWidget extends StatefulWidget {
+  final String distro;
+
+  const WSLTerminalWidget({super.key, required this.distro});
+
+  @override
+  State<StatefulWidget> createState() => _WSLTerminalWidgetState();
+}
+
+class _WSLTerminalWidgetState extends State<WSLTerminalWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Expanded(
+          child: ListView(
+            shrinkWrap: true,
+          ),
+        ),
+        TextField(
+          decoration: InputDecoration(
+            border: const OutlineInputBorder(),
+            suffixIcon: Padding(
+              padding: const EdgeInsets.all(8),
+              child: IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.send),
+              ),
+            ),
+          ),
+        )
+      ],
     );
   }
 }
@@ -223,7 +266,6 @@ class _WSLExplorerWidgetState extends State<WSLExplorerWidget>
 
               IconData icon;
               Function()? onTap;
-
               switch (data.type) {
                 case FileSystemEntityType.file:
                   icon = FontAwesomeIcons.file;
@@ -249,6 +291,12 @@ class _WSLExplorerWidgetState extends State<WSLExplorerWidget>
                 title: Text(entityBaseName),
                 subtitle: Text(friendlyName),
                 onTap: onTap,
+                trailing: IconButton(
+                  icon: const Icon(Icons.open_in_new),
+                  onPressed: () {
+                    openInExplorer(entity.path);
+                  },
+                ),
                 shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(8))),
               );

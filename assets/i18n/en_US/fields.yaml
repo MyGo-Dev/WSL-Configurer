@@ -30,5 +30,7 @@ install.automate: Automate Install
 
 manage: Manage
 manage.execute: Execute
-manage.terminal: Open Terminal
+manage.terminal: Terminal
+manage.file: File
+manage.open_terminal: Open Terminal
 manage.root: (root)

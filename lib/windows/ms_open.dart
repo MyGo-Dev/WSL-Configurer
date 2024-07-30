@@ -10,7 +10,7 @@ void openMSSetting(String name) {
   launchUrlString("ms-settings:$name");
 }
 
-void openInExplorer(String path) async {
+Future<void> openInExplorer(String path) async {
   await Process.run("explorer.exe", [path]);
 }
 

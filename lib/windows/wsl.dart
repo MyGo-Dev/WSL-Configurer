@@ -90,8 +90,8 @@ class WSLExplorer {
   late Directory current;
 
   WSLExplorer(this.distro) {
-    root = "//wsl.localhost/$distro";
-    current = Directory("$root/home");
+    root = "\\\\wsl.localhost\\$distro";
+    current = Directory("$root\\home");
   }
 
   Stream<FileSystemEntity> list() {
