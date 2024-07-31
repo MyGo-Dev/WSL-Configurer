@@ -121,7 +121,13 @@ class _SettingsPageState extends State<SettingsPage> {
                       Padding(
                         padding: const EdgeInsets.all(4),
                         child: IconButton(
-                          onPressed: Navigator.of(context).pop,
+                          onPressed: () {
+                            setState(() {
+                              configs.distroInfoUrl
+                                  .write(AppConfigs.defaultDistroInfoUrl);
+                            });
+                            Navigator.of(context).pop();
+                          },
                           icon: const Icon(Icons.restore),
                         ),
                       ),
