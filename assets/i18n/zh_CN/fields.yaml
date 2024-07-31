@@ -13,6 +13,8 @@ doctor: 诊断
 microsoft_store: 微软商店
 recommand: 推荐
 distro_info_url: Linux 发行版信息地址
+input: 输入
+
 theme: 主题
 thememode.dark: 深色
 thememode.system: 跟随系统
@@ -34,3 +36,4 @@ manage.terminal: 终端
 manage.file: 文件
 manage.open_terminal: 打开终端
 manage.root: (root)
+manage.terminate: 终止

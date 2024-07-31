@@ -159,6 +159,9 @@ class HomePageState extends State<HomePage> with RefreshMountedStateMixin {
           items: [
             PageContainer(
               title: context.i18n.getOrKey("home"),
+              child: const Center(
+                child: Text("TODO"),
+              ),
             ).toItem(icon: const Icon(Icons.home)),
             PageContainer(
               title: context.i18n.getOrKey("install"),
@@ -170,6 +173,9 @@ class HomePageState extends State<HomePage> with RefreshMountedStateMixin {
             ).toItem(icon: const Icon(Icons.apps)),
             PageContainer(
               title: context.i18n.getOrKey("doctor"),
+              child: const Center(
+                child: Text("TODO"),
+              ),
             ).toItem(icon: const Icon(FontAwesomeIcons.userDoctor)),
             PageContainer(
               title: context.i18n.getOrKey("settings"),

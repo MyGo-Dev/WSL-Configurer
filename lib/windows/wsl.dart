@@ -43,6 +43,13 @@ class WindowsSubSystemLinux {
     );
   }
 
+  static Future<Process> terminate({required String distro}) async {
+    return await Process.start(
+      "wsl",
+      ["-t", distro],
+    );
+  }
+
   static Future<List<String>> getAvailableDistro() async {
     return (await Process.run("wsl.exe", ["-l", "-q"],
             stdoutEncoding: encoding))

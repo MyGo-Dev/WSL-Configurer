@@ -13,6 +13,8 @@ doctor: Doctor
 microsoft_store: MicroSoft Store
 recommand: Recommand
 distro_info_url: Linux Distribution Info Url
+input: Input
+
 theme: Theme
 thememode.dark: Dark
 thememode.system: System
@@ -34,3 +36,4 @@ manage.terminal: Terminal
 manage.file: File
 manage.open_terminal: Open Terminal
 manage.root: (root)
+manage.terminate: Terminate

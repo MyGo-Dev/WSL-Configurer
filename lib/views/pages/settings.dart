@@ -112,29 +112,32 @@ class _SettingsPageState extends State<SettingsPage> {
               onPressed: () {
                 ComplexDialog.instance
                     .input(
-                      controller: TextEditingController(
-                          text: configs.distroInfoUrl
-                              .getOr(AppConfigs.defaultDistroInfoUrl)),
-                      context: context,
-                      title: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(4),
-                            child: IconButton(
-                              onPressed: Navigator.of(context).pop,
-                              icon: const Icon(Icons.restore),
-                            ),
-                          ),
-                          const Text("Input")
-                        ],
+                  controller: TextEditingController(
+                      text: configs.distroInfoUrl
+                          .getOr(AppConfigs.defaultDistroInfoUrl)),
+                  context: context,
+                  title: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(4),
+                        child: IconButton(
+                          onPressed: Navigator.of(context).pop,
+                          icon: const Icon(Icons.restore),
+                        ),
                       ),
-                    )
+                      context.i18nText("input"),
+                    ],
+                  ),
+                )
                     .then(
-                      (url) => setState(() {
-                        configs.distroInfoUrl
-                            .write(url ?? AppConfigs.defaultDistroInfoUrl);
-                      }),
-                    );
+                  (url) {
+                    if (url != null) {
+                      setState(() {
+                        configs.distroInfoUrl.write(url);
+                      });
+                    }
+                  },
+                );
               },
               icon: const Icon(Icons.edit)),
         ),

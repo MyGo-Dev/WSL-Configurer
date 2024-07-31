@@ -17,20 +17,12 @@ class _DistributionManagePageState extends State<DistributionManagePage> {
   Widget buildWidget() {
     if (current != null) {
       return Padding(
-        padding: const EdgeInsets.all(8),
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          appBar: AppBar(
-            leading: BackButton(
-              onPressed: () => setState(() {
-                current = null;
-              }),
-            ),
-            forceMaterialTransparency: true,
-            backgroundColor: Colors.transparent,
-            title: Text(current!),
-          ),
-          body: DistroManagePage(distro: current!),
+        padding: const EdgeInsets.all(4),
+        child: DistroManagePage(
+          distro: current!,
+          callback: () => setState(() {
+            current = null;
+          }),
         ),
       );
     }

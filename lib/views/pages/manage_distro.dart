@@ -16,7 +16,9 @@ import 'package:wslconfigurer/windows/wsl.dart';
 
 class DistroManagePage extends StatefulWidget {
   final String distro;
-  const DistroManagePage({super.key, required this.distro});
+  final Function() callback;
+  const DistroManagePage(
+      {super.key, required this.distro, required this.callback});
 
   @override
   State<StatefulWidget> createState() => _DistroManagePageState();
@@ -24,9 +26,9 @@ class DistroManagePage extends StatefulWidget {
 
 class _DistroManagePageState extends State<DistroManagePage>
     with RefreshMountedStateMixin {
-  Process? process;
-
   late final TextEditingController exec;
+  String? user;
+
   @override
   void initState() {
     super.initState();
@@ -36,164 +38,220 @@ class _DistroManagePageState extends State<DistroManagePage>
   @override
   void dispose() {
     super.dispose();
-    process?.kill();
     exec.dispose();
   }
 
   @override
-  void refreshMountedFn(Function() fn) {
-    process?.kill();
-
-    super.refreshMountedFn(fn);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return NavigationView(
+    return Scaffold(
       backgroundColor: Colors.transparent,
-      labelType: NavigationLabelType.selected,
-      items: [
-        NavigationItem(
-          icon: const Icon(Icons.home),
-          label: context.i18n.getOrKey("home"),
-          page: AnimationLimiter(
-            child: ListView(
-              children: [
-                Card.filled(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Column(
-                      children: [
-                        FilledButton(
-                          onPressed: () => WindowsSubSystemLinux.start(
-                              distro: widget.distro),
-                          child: WidthInfCenterWidget(
-                            child: context.i18nText("manage.terminal"),
-                          ),
-                        ),
-                        FilledButton(
-                          onPressed: () => WindowsSubSystemLinux.start(
-                            distro: widget.distro,
-                            user: "root",
-                          ),
-                          child: WidthInfCenterWidget(
-                            child: Text(
-                                context.i18n.getOrKey("manage.open_terminal") +
-                                    context.i18n.getOrKey("manage.root")),
-                          ),
-                        )
-                      ].eachPadding(),
-                    ),
-                  ),
-                ),
-                Card.filled(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Column(
-                      children: [
-                        TextField(
-                          controller: exec,
-                          decoration: const InputDecoration(
-                              border: OutlineInputBorder()),
-                        ),
-                        FilledButton(
-                          onPressed: () => WindowsSubSystemLinux.exec(
-                            distro: widget.distro,
-                            commands: exec.text.split(" "),
-                          ).then(
-                            (value) => refreshMountedFn(() => process = value),
-                          ),
-                          child: WidthInfCenterWidget(
-                            child: context.i18nText("manage.execute"),
-                          ),
-                        ),
-                        FilledButton(
-                          onPressed: () => WindowsSubSystemLinux.exec(
-                            distro: widget.distro,
-                            commands: exec.text.split(" "),
-                          ).then(
-                            (value) => refreshMountedFn(() => process = value),
-                          ),
-                          child: WidthInfCenterWidget(
-                            child: Text(
-                                context.i18n.getOrKey("manage.execute") +
-                                    context.i18n.getOrKey("manage.root")),
-                          ),
-                        ),
-                        process != null
-                            ? ProcessText(
-                                key: ValueKey(process),
-                                process: process!,
-                                codec: utf8,
-                              )
-                            : const SizedBox.shrink(),
-                      ].eachPadding(),
-                    ),
-                  ),
-                ),
-              ].enumerate(
-                (index, widget) => AnimationConfiguration.staggeredList(
-                  position: index,
-                  child: SlideAnimation(
+      appBar: AppBar(
+        leading: BackButton(
+          onPressed: widget.callback,
+        ),
+        forceMaterialTransparency: true,
+        backgroundColor: Colors.transparent,
+        title: Text(widget.distro),
+        actions: [
+          context.i18nText("root"),
+          const SizedBox(
+            width: 4,
+          ),
+          Switch(
+            value: user != null,
+            onChanged: (value) => setState(() {
+              user = value ? "root" : null;
+            }),
+            thumbIcon: const WidgetStatePropertyAll(Icon(Icons.security)),
+          )
+        ],
+      ),
+      body: NavigationView(
+        backgroundColor: Colors.transparent,
+        labelType: NavigationLabelType.selected,
+        items: [
+          NavigationItem(
+            icon: const Icon(Icons.home),
+            label: context.i18n.getOrKey("home"),
+            page: AnimationLimiter(
+              child: ListView(
+                children: [
+                  Card.filled(
                     child: Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: widget,
+                      padding: const EdgeInsets.all(8),
+                      child: Column(
+                        children: [
+                          FilledButton(
+                            onPressed: () => WindowsSubSystemLinux.start(
+                              distro: widget.distro,
+                              user: user,
+                            ),
+                            child: WidthInfCenterWidget(
+                              child: context.i18nText("manage.open_terminal"),
+                            ),
+                          ),
+                          FilledButton(
+                            onPressed: () => WindowsSubSystemLinux.terminate(
+                              distro: widget.distro,
+                            ),
+                            child: WidthInfCenterWidget(
+                              child: context.i18nText("manage.terminate"),
+                            ),
+                          ),
+                        ].eachPadding(),
+                      ),
+                    ),
+                  ),
+                ].enumerate(
+                  (index, widget) => AnimationConfiguration.staggeredList(
+                    position: index,
+                    child: SlideAnimation(
+                      child: Padding(
+                        padding: const EdgeInsets.all(4),
+                        child: widget,
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
-        NavigationItem(
-            icon: const Icon(Icons.terminal),
-            label: context.i18n.getOrKey("manage.terminal"),
-            page: WSLTerminalWidget(
-              distro: widget.distro,
-            )),
-        NavigationItem(
-          icon: const Icon(Icons.folder),
-          page: ListView(children: [
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: WSLExplorerWidget(distro: widget.distro),
-            ),
-          ]),
-          label: context.i18n.getOrKey("manage.file"),
-        )
-      ],
-      direction: Axis.horizontal,
+          NavigationItem(
+              icon: const Icon(Icons.terminal),
+              label: context.i18n.getOrKey("manage.terminal"),
+              page: _WSLTerminalWidget(
+                bind: this,
+                distro: widget.distro,
+              )),
+          NavigationItem(
+            icon: const Icon(Icons.folder),
+            page: ListView(children: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: WSLExplorerWidget(distro: widget.distro),
+              ),
+            ]),
+            label: context.i18n.getOrKey("manage.file"),
+          )
+        ],
+        direction: Axis.horizontal,
+      ),
     );
   }
 }
 
-class WSLTerminalWidget extends StatefulWidget {
+class _WSLTerminalWidget extends StatefulWidget {
+  final _DistroManagePageState bind;
   final String distro;
 
-  const WSLTerminalWidget({super.key, required this.distro});
+  const _WSLTerminalWidget({required this.distro, required this.bind});
 
   @override
   State<StatefulWidget> createState() => _WSLTerminalWidgetState();
 }
 
-class _WSLTerminalWidgetState extends State<WSLTerminalWidget> {
+class _WSLTerminalWidgetState extends State<_WSLTerminalWidget> {
+  List<MapEntry<String, Process>> processList = [];
+  late TextEditingController controller;
+  Process? current;
+
+  bool available = true;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    controller.dispose();
+  }
+
+  void runCommand() {
+    if (controller.text.trim().isEmpty) {
+      return;
+    }
+
+    setState(() {
+      available = false;
+    });
+
+    WindowsSubSystemLinux.exec(
+      distro: widget.distro,
+      commands: controller.text.split(" ").where((value) => value.isNotEmpty),
+      user: widget.bind.user,
+    ).then(
+      (proc) => setState(() {
+        current = proc;
+        proc.exitCode.then((_) => setState(() {
+              available = true;
+            }));
+        processList.add(MapEntry(controller.text, proc));
+        controller.clear();
+      }),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Expanded(
-          child: ListView(
-            shrinkWrap: true,
+          child: SingleChildScrollView(
+            child: Column(
+              children: processList
+                  .map(
+                    (entry) => Column(
+                      children: [
+                        Card.filled(
+                          child: ListTile(
+                            title: Text(entry.key),
+                          ),
+                        ),
+                        ProcessText(
+                          process: entry.value,
+                          codec: utf8,
+                        ),
+                      ],
+                    ),
+                  )
+                  .toList(),
+            ),
           ),
         ),
         TextField(
+          onSubmitted: (_) => runCommand(),
+          controller: controller,
           decoration: InputDecoration(
             border: const OutlineInputBorder(),
             suffixIcon: Padding(
               padding: const EdgeInsets.all(8),
-              child: IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.send),
+              child: AnimatedSwitcher(
+                duration: Durations.medium4,
+                child: available
+                    ? IconButton(
+                        onPressed: runCommand,
+                        icon: const Icon(Icons.send),
+                      )
+                    : Stack(
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.all(2),
+                            child: CircularProgressIndicator(),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              setState(() {
+                                current?.kill();
+                                available = true;
+                              });
+                            },
+                            icon: const Icon(Icons.stop),
+                          ),
+                        ],
+                      ),
               ),
             ),
           ),
