@@ -70,7 +70,7 @@ class MyAppState extends State<MyApp> with RefreshMountedStateMixin {
   @override
   Widget build(BuildContext context) {
     var configs = ArcheBus.bus.of<AppConfigs>();
-    var locale = configs.locale.getOr("en_US").split("_");
+    var locale = context.i18n.locale.split("_");
     return DynamicColorBuilder(
       builder: (lightDynamic, darkDynamic) => MaterialApp(
         theme: ThemeData(

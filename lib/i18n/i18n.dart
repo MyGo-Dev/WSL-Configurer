@@ -8,19 +8,18 @@ import 'package:url_launcher/url_launcher_string.dart';
 import 'package:wslconfigurer/i18n/constants.dart';
 import 'package:yaml/yaml.dart';
 
-class I18n {
+@immutable
+final class I18n {
   late final Map<String, String> _fields;
   late final Map<String, String> avaiableLanguages;
-  String locale = "en_US";
+  late final String locale;
   late final LazyDynamicCan<StringTranslator<ThemeMode>> themeModeTranslator;
 
   Map<K, V> _load<K, V>(String data) => Map.from(loadYaml(data));
 
   FutureOr<void> init([String? locale]) async {
     avaiableLanguages = _load(await rootBundle.loadString(i18nLanguages));
-    if (locale != null) {
-      this.locale = locale;
-    }
+    this.locale = locale ?? "en_US";
 
     _fields = _load(await rootBundle.loadString(fileName("fields.yaml")));
     _initLazyCans();

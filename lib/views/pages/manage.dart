@@ -37,20 +37,15 @@ class _DistributionManagePageState extends State<DistributionManagePage> {
               child: CircularProgressIndicator(),
             );
           }
-
           return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(8),
               child: AnimationLimiter(
-                child: GridView.count(
-                  shrinkWrap: true,
-                  crossAxisCount: 5,
+                child: Wrap(
                   children: data.enumerate(
                     (index, distro) {
-                      return AnimationConfiguration.staggeredGrid(
+                      return AnimationConfiguration.staggeredList(
                         position: index,
-                        duration: const Duration(milliseconds: 375),
-                        columnCount: (data.length ~/ 5) + 1,
                         child: ScaleAnimation(
                           child: FadeInAnimation(
                             child: Card.filled(
@@ -60,7 +55,7 @@ class _DistributionManagePageState extends State<DistributionManagePage> {
                                   current = distro;
                                 }),
                                 child: SizedBox.square(
-                                  dimension: 80,
+                                  dimension: 120,
                                   child: Center(
                                     child: Text(distro),
                                   ),
