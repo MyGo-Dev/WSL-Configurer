@@ -32,7 +32,7 @@ class _SettingsPageState extends State<SettingsPage> {
               var i18n = I18n();
               await i18n.init(value);
               ArcheBus.bus.replace<I18n>(i18n);
-              rootKey.currentState?.setState(() {});
+              appKey.currentState?.refreshMounted();
               setState(() {});
             },
             itemBuilder: (context) => context.i18n.avaiableLanguages.entries

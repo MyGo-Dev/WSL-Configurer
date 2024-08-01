@@ -4,12 +4,14 @@ import 'package:arche/arche.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:superuser/superuser.dart';
 import 'package:system_fonts/system_fonts.dart';
 import 'package:wslconfigurer/i18n/i18n.dart';
 import 'package:wslconfigurer/models/config.dart';
 import 'package:wslconfigurer/models/key.dart';
+import 'package:wslconfigurer/views/pages/doctor.dart';
 import 'package:wslconfigurer/views/pages/manage.dart';
 import 'package:wslconfigurer/views/pages/settings.dart';
 import 'package:wslconfigurer/views/widgets/basic.dart';
@@ -68,6 +70,7 @@ class MyAppState extends State<MyApp> with RefreshMountedStateMixin {
   @override
   Widget build(BuildContext context) {
     var configs = ArcheBus.bus.of<AppConfigs>();
+    var locale = configs.locale.getOr("en_US").split("_");
     return DynamicColorBuilder(
       builder: (lightDynamic, darkDynamic) => MaterialApp(
         theme: ThemeData(
@@ -88,6 +91,16 @@ class MyAppState extends State<MyApp> with RefreshMountedStateMixin {
             key: rootKey,
           ),
         ),
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale("en", "US"),
+          Locale("zh", "CN"),
+        ],
+        locale: Locale(locale.first, locale.last),
         debugShowCheckedModeBanner: false,
         themeMode: configs.themeMode.getOrWrite(ThemeMode.system),
       ),
@@ -173,9 +186,7 @@ class HomePageState extends State<HomePage> with RefreshMountedStateMixin {
             ).toItem(icon: const Icon(Icons.apps)),
             PageContainer(
               title: context.i18n.getOrKey("doctor"),
-              child: const Center(
-                child: Text("TODO"),
-              ),
+              child: const DoctorPage(),
             ).toItem(icon: const Icon(FontAwesomeIcons.userDoctor)),
             PageContainer(
               title: context.i18n.getOrKey("settings"),
