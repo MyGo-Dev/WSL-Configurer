@@ -140,6 +140,17 @@ class HomePageState extends State<HomePage> with RefreshMountedStateMixin {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
       body: NavigationView(
+          transitionBuilder: (child, animation) {
+            const begin = Offset(0.0, 1.0);
+            const end = Offset.zero;
+            final tween = Tween(begin: begin, end: end)
+                .chain(CurveTween(curve: Curves.fastEaseInToSlowEaseOut));
+            final offsetAnimation = animation.drive(tween);
+            return SlideTransition(
+              position: offsetAnimation,
+              child: child,
+            );
+          },
           builder: (context, vertical, horizontal, state) => Column(
                 children: [
                   Container(
