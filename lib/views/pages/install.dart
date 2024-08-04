@@ -5,16 +5,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:system_info2/system_info2.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 import 'package:wslconfigurer/i18n/i18n.dart';
-import 'package:wslconfigurer/models/config.dart';
 import 'package:wslconfigurer/models/distribution.dart';
 import 'package:wslconfigurer/views/widgets/basic.dart';
 import 'package:wslconfigurer/views/widgets/divider.dart';
-import 'package:wslconfigurer/views/widgets/optfeat.dart';
+import 'package:wslconfigurer/views/widgets/optional_features.dart';
 import 'package:wslconfigurer/views/widgets/process.dart';
+import 'package:wslconfigurer/views/widgets/update_kernel.dart';
 import 'package:wslconfigurer/windows/ms_open.dart';
-import 'package:wslconfigurer/windows/msi.dart';
 import 'package:wslconfigurer/windows/utf16.dart';
 
 class InstallPage extends StatefulWidget {
@@ -108,38 +106,7 @@ class _InstallPageState extends State<InstallPage> {
             title: context.i18nText("install.upgrade_wsl2_kernel"),
             trailing: Text(SysInfo.rawKernelArchitecture),
           ),
-          Card.filled(
-            child: Column(
-              children: [
-                ListTile(
-                  title: context.i18nText("install.manual"),
-                  trailing: IconButton(
-                    onPressed: () => launchUrlString(
-                        AppConfigs.wslLinuxKernelUpdateInstallerUrl),
-                    icon: const Icon(Icons.open_in_browser),
-                  ),
-                ),
-                ListTile(
-                  title: context.i18nText("install.automate"),
-                  trailing: IconButton(
-                    onPressed: () {
-                      ComplexDialog.instance
-                          .withContext(context: context)
-                          .withChild(
-                            DownloadMSIProgressDialog(
-                              AppConfigs.wslLinuxKernelUpdateInstallerUrl,
-                              logPath: "installer.log",
-                            ),
-                          )
-                          .copy(barrierDismissible: false)
-                          .prompt();
-                    },
-                    icon: const Icon(Icons.install_desktop),
-                  ),
-                )
-              ],
-            ),
-          ),
+          const Card.filled(child: UpdateKernel()),
           divider8,
           ListTile(
             leading: const Icon(FontAwesomeIcons.section),

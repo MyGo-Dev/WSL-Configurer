@@ -138,6 +138,7 @@ class HomePageState extends State<HomePage> with RefreshMountedStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
       body: NavigationView(
           builder: (context, vertical, horizontal, state) => Column(
                 children: [
@@ -162,7 +163,7 @@ class HomePageState extends State<HomePage> with RefreshMountedStateMixin {
                             appWindow.startDragging();
                           },
                         ),
-                        state.content
+                        state.content,
                       ],
                     ),
                   )
@@ -171,24 +172,29 @@ class HomePageState extends State<HomePage> with RefreshMountedStateMixin {
           backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
           items: [
             PageContainer(
+              key: UniqueKey(),
               title: context.i18n.getOrKey("home"),
               child: const Center(
                 child: Text("TODO"),
               ),
             ).toItem(icon: const Icon(Icons.home)),
             PageContainer(
+              key: UniqueKey(),
               title: context.i18n.getOrKey("install"),
               child: const InstallPage(),
             ).toItem(icon: const Icon(Icons.install_desktop)),
             PageContainer(
+              key: UniqueKey(),
               title: context.i18n.getOrKey("manage"),
               child: const DistributionManagePage(),
             ).toItem(icon: const Icon(Icons.apps)),
             PageContainer(
+              key: UniqueKey(),
               title: context.i18n.getOrKey("doctor"),
               child: const DoctorPage(),
             ).toItem(icon: const Icon(FontAwesomeIcons.userDoctor)),
             PageContainer(
+              key: UniqueKey(),
               title: context.i18n.getOrKey("settings"),
               child: const SettingsPage(),
             ).toItem(icon: const Icon(Icons.settings)),

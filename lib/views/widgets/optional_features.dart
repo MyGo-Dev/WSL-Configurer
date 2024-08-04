@@ -56,7 +56,7 @@ class _CheckOptionalFeatureWidgetState
                   spacing: 8,
                   direction: Axis.vertical,
                   children: [
-                    context.i18nMarkdown("optional_features.md", true),
+                    context.i18nMarkdown("optional_features", true),
                     FilledButton(
                       onPressed: () => openMSSetting("optionalfeatures"),
                       child: context.i18nText("optional_features"),

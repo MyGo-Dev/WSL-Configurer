@@ -69,7 +69,7 @@ extension I18nEx on BuildContext {
 
   Widget i18nMarkdown(String fileName, [bool shrinkWrap = true]) {
     return FutureBuilder(
-      future: ArcheBus.bus.of<I18n>().loadString(fileName),
+      future: ArcheBus.bus.of<I18n>().loadString("$fileName.md"),
       builder: (context, snapshot) {
         var data = snapshot.data;
         if (data == null) {
